@@ -70,11 +70,7 @@ class NvclothConan(ConanFile):
             return
         filepath = os.path.join(self._source_subfolder, "NvCloth/include/NvCloth/ps/PsAllocator.h")
         # #include <typeinfo.h> to #include <typeinfo>
-        with open(filepath, "r") as f:
-            new_text = f.read().replace('#include <typeinfo.h>', '#include <typeinfo>')
-
-        with open(filepath, "w") as f:
-            f.write(new_text)
+        tools.replace_in_file(filepath, '#include <typeinfo.h>', '#include <typeinfo>')
 
     def build(self):
         os.environ['GW_DEPS_ROOT'] = os.path.abspath(self._source_subfolder)
@@ -83,7 +79,7 @@ class NvclothConan(ConanFile):
         cmake.build(target='NvCloth')
 
     def package(self):
-        self.copy("*.h", dst="include", src=os.path.join(self._source_subfolder, "runtime", "src"))
+        self.copy("*.h", dst="include", src=os.path.join(self._source_subfolder, "NvCloth", "include"))
         self.copy("*.a", dst="lib", keep_path=False)
         self.copy("*.so", dst="lib", keep_path=False)
         self.copy("*.lib", dst="lib", keep_path=False)
@@ -100,3 +96,9 @@ class NvclothConan(ConanFile):
         if not self.options.shared:
             self.cpp_info.defines.append("ANTLR4CPP_STATIC")
         '''
+    
+    def requirements(self):
+        return self.requires("nvtx/3.0.1")
+    
+    def build_requirements(self):
+        self.build_requires("nvtx/3.0.1")
