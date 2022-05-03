@@ -1,1 +1,0 @@
-conan test test_package nvcloth/1.1.6@user/channel
