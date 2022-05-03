@@ -1,4 +1,3 @@
-from numpy import source
 from conans import ConanFile, CMake, tools
 import os
 import shutil
@@ -71,6 +70,8 @@ class NvclothConan(ConanFile):
         filepath = os.path.join(self._source_subfolder, "NvCloth/include/NvCloth/ps/PsAllocator.h")
         # #include <typeinfo.h> to #include <typeinfo>
         tools.replace_in_file(filepath, '#include <typeinfo.h>', '#include <typeinfo>')
+
+        shutil.rmtree(os.path.join(self._source_subfolder, "NvCloth", "samples"))
 
     def build(self):
         os.environ['GW_DEPS_ROOT'] = os.path.abspath(self._source_subfolder)
