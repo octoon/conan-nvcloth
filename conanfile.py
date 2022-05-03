@@ -65,11 +65,9 @@ class NvclothConan(ConanFile):
         return cmake
     
     def _fix_source(self):
-        if self.settings.os != "Windows":
-            return
-        filepath = os.path.join(self._source_subfolder, "NvCloth/include/NvCloth/ps/PsAllocator.h")
-        # #include <typeinfo.h> to #include <typeinfo>
-        tools.replace_in_file(filepath, '#include <typeinfo.h>', '#include <typeinfo>')
+        if self.settings.os == "Windows":
+            filepath = os.path.join(self._source_subfolder, "NvCloth/include/NvCloth/ps/PsAllocator.h")
+            tools.replace_in_file(filepath, '#include <typeinfo.h>', '#include <typeinfo>')
 
         shutil.rmtree(os.path.join(self._source_subfolder, "NvCloth", "samples"))
 
@@ -90,16 +88,17 @@ class NvclothConan(ConanFile):
 
     def package_info(self):
         self.cpp_info.libs = tools.collect_libs(self)
-        '''
-        # debug_postfix = "d" if self.settings.build_type == "Debug" else ""
-        shared_postfix = "shared" if self.options.shared else "static"
-        self.cpp_info.libs = ["antlr4-runtime-" + shared_postfix]
-        if not self.options.shared:
-            self.cpp_info.defines.append("ANTLR4CPP_STATIC")
-        '''
-    
+
+        if self.settings.os == "Windows":
+            debug_postfix = "DEBUG" if self.settings.build_type == "Debug" else ""
+            shared_postfix = "shared" if self.options.shared else "static"
+            arch_posrfix = "x64" if self.settings.arch == "x86_64" else str(self.settings.arch)
+            self.cpp_info.libs = [f"NvCloth{debug_postfix}_{arch_posrfix}"]
+
+    '''
     def requirements(self):
         return self.requires("nvtx/3.0.1")
     
     def build_requirements(self):
         self.build_requires("nvtx/3.0.1")
+    '''
