@@ -79,6 +79,7 @@ class NvclothConan(ConanFile):
 
     def package(self):
         self.copy("*.h", dst="include", src=os.path.join(self._source_subfolder, "NvCloth", "include"))
+        self.copy("*.h", dst="include", src=os.path.join(self._source_subfolder, "NvCloth", "extensions", "include"))
         self.copy("*.a", dst="lib", keep_path=False)
         self.copy("*.so", dst="lib", keep_path=False)
         self.copy("*.lib", dst="lib", keep_path=False)
