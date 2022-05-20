@@ -1,6 +1,0 @@
-build/
-conan.lock
-conanbuildinfo.txt
-conaninfo.txt
-graph_info.json
-*.cmake
